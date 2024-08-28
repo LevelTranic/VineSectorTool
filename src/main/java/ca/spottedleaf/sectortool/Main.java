@@ -7,6 +7,8 @@ import ca.spottedleaf.sectortool.conversion.VerifyWorld;
 import ca.spottedleaf.sectortool.fuzz.FuzzProfilingTest;
 import ca.spottedleaf.sectortool.test.ReadProfilingTest;
 import ca.spottedleaf.sectortool.test.RunProfilingTest;
+import com.aayushatharva.brotli4j.Brotli4jLoader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ public class Main {
     public static final Operation OPERATION = Operation.fromProperty(System.getProperty(OPERATION_PROPERTY));
 
     public static void main(final String[] args) {
+        Brotli4jLoader.ensureAvailability();
         if (OPERATION == null) {
             System.err.println("Bad operation, select one from: -D" + OPERATION_PROPERTY + "=[" + String.join(",", Operation.getProperties()) + "]");
             return;

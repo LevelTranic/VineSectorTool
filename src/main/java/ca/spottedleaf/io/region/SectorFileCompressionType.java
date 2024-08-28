@@ -7,6 +7,8 @@ import ca.spottedleaf.io.region.io.java.SimpleBufferedOutputStream;
 import ca.spottedleaf.io.region.io.zstd.ZSTDInputStream;
 import ca.spottedleaf.io.region.io.zstd.ZSTDOutputStream;
 import ca.spottedleaf.io.buffer.BufferChoices;
+import com.aayushatharva.brotli4j.decoder.BrotliInputStream;
+import com.aayushatharva.brotli4j.encoder.BrotliOutputStream;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -83,6 +85,17 @@ public abstract class SectorFileCompressionType {
                     scopedBufferChoices.t16k().acquireDirectBuffer(), scopedBufferChoices.t16k().acquireDirectBuffer(),
                     scopedBufferChoices.zstdCtxs().acquireCompressor(), null, output
             );
+        }
+    };
+    public static final SectorFileCompressionType BROTLI = new SectorFileCompressionType(6) {
+        @Override
+        public InputStream createInput(final BufferChoices scopedBufferChoices, final ByteBufferInputStream input) throws IOException {
+            return new SimpleBufferedInputStream(new BrotliInputStream(input), scopedBufferChoices.t16k().acquireJavaBuffer());
+        }
+
+        @Override
+        public OutputStream createOutput(final BufferChoices scopedBufferChoices, final ByteBufferOutputStream output) throws IOException {
+            return new SimpleBufferedOutputStream(new BrotliOutputStream(output), scopedBufferChoices.t16k().acquireJavaBuffer());
         }
     };
 
